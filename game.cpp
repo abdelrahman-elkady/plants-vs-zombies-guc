@@ -8,36 +8,48 @@ using namespace std;
 
 void timer(int);
 void keyboardHandler(unsigned char, int, int );
+void drawAxes();
 
 const int FPS = 33;
 
-float rotAng;
 
-Camera *camera = new Camera(8.0,8.0,8.0);
+Camera* camera = new Camera(10.0,15.0,10.0,0.0,0.0,0.0);
 
-void Display(void) {
-        cout << camera->getXPosition() << endl;
+
+bool xZoom = false;
+bool yZoom = false;
+
+float xZoomUnit = 0.2;
+
+void render(void) {
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glPushMatrix();
-        glRotatef(rotAng, 0, 1, 0);
-        glColor3f(0.0f, 0.0f, 0.0f);
-        glutSolidCube(1);
-        glPopMatrix();
+        camera->activate();
 
-        glPushMatrix();
-        glRotatef(-rotAng, 0, 1, 0);
-        glTranslatef(2, 0, 0);
-        glRotatef(rotAng, 1, 0, 0);
-        glColor3f(0.5f, 0.5f, 0.5f);
-        glutSolidSphere(0.5, 25, 25);
-        glPopMatrix();
+        glPushMatrix(); // camera
 
-        glFlush();
+        camera->rotateCamera(false,true,false);
+        drawAxes();
+
+        glPopMatrix(); // end camera
+
+        glutSwapBuffers();
 }
 
 void timer(int t) {
-        rotAng += 1;
+
+        camera->setYAngle(camera->getYAngle() + 1);
+
+        if(xZoom) {
+                float val = camera->getXPosition();
+
+                if(val > 50 || val < 10) {
+                        xZoomUnit *= -1;
+                }
+
+                camera->setXPosition(val+xZoomUnit);
+        }
 
         glutPostRedisplay();
         glutTimerFunc(FPS, timer, 0);
@@ -45,8 +57,34 @@ void timer(int t) {
 
 void keyboardHandler(unsigned char key, int x, int y){
         if(key == SPACEBAR) {
-                camera->activate();
+                if(xZoom) {
+                        xZoom = false;
+                }
+                else {
+                        xZoom = true;
+                }
         }
+
+}
+
+void drawAxes(void){
+        glPushMatrix();
+
+        glLineWidth(2.0);
+
+        glBegin(GL_LINES);
+        glColor3f(1,0,0); // x axis is red.
+        glVertex3f(0.0f,0.0f,0.0f);
+        glVertex3f(500.0f,0.0f,0.0f);
+        glColor3f(0,1,0); // y axis is green.
+        glVertex3f(0.0f,0.0f,0.0f);
+        glVertex3f(0.0f,500.0f,0.0f);
+        glColor3f(0,0,1); // z axis is blue.
+        glVertex3f(0.0f,0.0f,0.0f);
+        glVertex3f(0.0f,0.0f,500.0f);
+        glEnd();
+
+        glPopMatrix ();
 }
 
 int main(int argc, char** argv) {
@@ -57,11 +95,11 @@ int main(int argc, char** argv) {
         glutInitWindowPosition(150, 150);
 
         glutCreateWindow("Plants vs Zombies");
-        glutDisplayFunc(Display);
+        glutDisplayFunc(render);
         glutTimerFunc(0, timer, 0);
         glutKeyboardFunc(keyboardHandler);
 
-        glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
         glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
         glEnable(GL_DEPTH_TEST);

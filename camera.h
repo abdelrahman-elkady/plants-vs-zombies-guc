@@ -11,13 +11,16 @@ class Camera
 private:
         float x, y, z,xAngle, yAngle, zAngle;
 public:
-        Camera(float x,float y, float z){
+        Camera(float x,float y, float z,float xAngle,float yAngle,float zAngle){
                 this->x = x; this->y = y; this->z = z;
+                this->xAngle = xAngle; this->yAngle = yAngle; this->zAngle = zAngle;
+                this->rotateCamera(xAngle,yAngle,zAngle);
         }
 
         void moveCamera(float x,float y, float z);
-        void rotateCamera(float xAngle,float yAngle,float zAngle);
+        void rotateCamera(bool xEnable,bool yEnable,bool zEnable);
         void activate();
+
 
         float getXPosition(){
                 return this->x;
@@ -29,15 +32,36 @@ public:
                 return this->z;
         }
 
-        void getXPosition(float x){
+        void setXPosition(float x){
                 this->x = x;
         }
-        void getYPosition(float y){
+        void setYPosition(float y){
                 this->y = y;
         }
-        void getZPosition(float z){
+        void setZPosition(float z){
                 this->z = z;
         }
+
+        float getXAngle(){
+                return this->xAngle;
+        }
+        float getYAngle(){
+                return this->yAngle;
+        }
+        float getZAngle(){
+                return this->zAngle;
+        }
+
+        void setXAngle(float xAngle){
+                this->xAngle = xAngle;
+        }
+        void setYAngle(float yAngle){
+                this->yAngle = yAngle;
+        }
+        void setZAngle(float zAngle){
+                this->zAngle = zAngle;
+        }
+
 
 
 };
