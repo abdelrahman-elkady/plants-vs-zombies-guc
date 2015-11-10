@@ -1,6 +1,8 @@
 #include <GL/glut.h>
-#include "camera.h"
 #include <iostream>
+#include <vector>
+#include "camera.h"
+#include "tile.h"
 
 using namespace std;
 
@@ -15,9 +17,9 @@ const int FPS = 33;
 
 Camera* camera = new Camera(10.0,15.0,10.0,0.0,0.0,0.0);
 
+vector< vector<Tile*> > grid;
 
-bool xZoom = false;
-bool yZoom = false;
+bool xZoomEnabled = false;
 
 float xZoomUnit = 0.2;
 
@@ -32,6 +34,30 @@ void render(void) {
         camera->rotateCamera(false,true,false);
         drawAxes();
 
+        glColor3f(0.0,0.5,0.0);
+
+        // Grid drawing
+        for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 7; j++) {
+                        glPushMatrix();
+                        glTranslatef(j,0,i);
+                        if((i%2==0 && j%2 ==0) || (i%2==1 && j%2 ==1)) {
+                                glColor3f(0.0,0.4,0.0);
+                        }else{
+                                glColor3f(0.0,0.5,0.0);
+                        }
+                        grid[i][j]->draw();
+                        glPopMatrix();
+                }
+        }
+        // End Grid drawing
+
+        glColor3f(0.0,0.0,0.0);
+        glPushMatrix();
+        glTranslatef(0.5,0.5,0.5);
+        glutSolidCube(1);
+        glPopMatrix();
+
         glPopMatrix(); // end camera
 
         glutSwapBuffers();
@@ -39,9 +65,11 @@ void render(void) {
 
 void timer(int t) {
 
+        camera->setXAngle(camera->getXAngle() + 1);
         camera->setYAngle(camera->getYAngle() + 1);
+        camera->setZAngle(camera->getZAngle() + 1);
 
-        if(xZoom) {
+        if(xZoomEnabled) {
                 float val = camera->getXPosition();
 
                 if(val > 50 || val < 10) {
@@ -57,11 +85,11 @@ void timer(int t) {
 
 void keyboardHandler(unsigned char key, int x, int y){
         if(key == SPACEBAR) {
-                if(xZoom) {
-                        xZoom = false;
+                if(xZoomEnabled) {
+                        xZoomEnabled = false;
                 }
                 else {
-                        xZoom = true;
+                        xZoomEnabled = true;
                 }
         }
 
@@ -101,6 +129,12 @@ int main(int argc, char** argv) {
 
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
         glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
+
+        grid.resize(5);
+        for (int i = 0; i < 5; ++i) {
+                grid[i].resize(7, new Tile());
+        }
 
         glEnable(GL_DEPTH_TEST);
 
