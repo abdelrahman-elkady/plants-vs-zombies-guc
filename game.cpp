@@ -71,13 +71,13 @@ void timer(int t) {
         camera->setZAngle(camera->getZAngle() + 1);
 
         if(xZoomEnabled) {
-                float val = camera->getXPosition();
+                float val = camera->getXCoordinate();
 
                 if(val > 50 || val < 10) {
                         xZoomUnit *= -1;
                 }
 
-                camera->setXPosition(val+xZoomUnit);
+                camera->setXCoordinate(val+xZoomUnit);
         }
 
         glutPostRedisplay();

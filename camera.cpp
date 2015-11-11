@@ -1,8 +1,8 @@
 #include "camera.h"
 #include <GL/glut.h>
 
-void Camera::moveCamera(float x,float y, float z){
-        this->x = x; this->y = y; this->z = z;
+void Camera::moveCamera(float xCoordinate,float yCoordinate, float zCoordinate){
+        this->xCoordinate = xCoordinate; this->yCoordinate = yCoordinate; this->zCoordinate = zCoordinate;
 }
 
 void Camera::rotateCamera(bool xEnable,bool yEnable,bool zEnable){
@@ -16,5 +16,5 @@ void Camera::rotateCamera(bool xEnable,bool yEnable,bool zEnable){
 void Camera::activate(){
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        gluLookAt(this->x, this->y, this->z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        gluLookAt(this->xCoordinate, this->yCoordinate, this->zCoordinate, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }

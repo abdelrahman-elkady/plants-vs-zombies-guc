@@ -9,37 +9,37 @@ using namespace std;
 class Camera
 {
 private:
-        float x, y, z,xAngle, yAngle, zAngle;
+        float xCoordinate, yCoordinate, zCoordinate,xAngle, yAngle, zAngle;
 public:
-        Camera(float x,float y, float z,float xAngle,float yAngle,float zAngle){
-                this->x = x; this->y = y; this->z = z;
+        Camera(float xCoordinate,float yCoordinate, float zCoordinate,float xAngle,float yAngle,float zAngle){
+                this->xCoordinate = xCoordinate; this->yCoordinate = yCoordinate; this->zCoordinate = zCoordinate;
                 this->xAngle = xAngle; this->yAngle = yAngle; this->zAngle = zAngle;
                 this->rotateCamera(xAngle,yAngle,zAngle);
         }
 
-        void moveCamera(float x,float y, float z);
+        void moveCamera(float xCoordinate,float yCoordinate, float zCoordinate);
         void rotateCamera(bool xEnable,bool yEnable,bool zEnable);
         void activate();
 
 
-        float getXPosition(){
-                return this->x;
+        float getXCoordinate(){
+                return this->xCoordinate;
         }
-        float getYPosition(){
-                return this->y;
+        float getYCoordinate(){
+                return this->yCoordinate;
         }
-        float getZPosition(){
-                return this->z;
+        float getZCoordinate(){
+                return this->zCoordinate;
         }
 
-        void setXPosition(float x){
-                this->x = x;
+        void setXCoordinate(float xCoordinate){
+                this->xCoordinate = xCoordinate;
         }
-        void setYPosition(float y){
-                this->y = y;
+        void setYCoordinate(float yCoordinate){
+                this->yCoordinate = yCoordinate;
         }
-        void setZPosition(float z){
-                this->z = z;
+        void setZCoordinate(float zCoordinate){
+                this->zCoordinate = zCoordinate;
         }
 
         float getXAngle(){
