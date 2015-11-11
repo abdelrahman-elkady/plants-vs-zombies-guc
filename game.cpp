@@ -37,6 +37,7 @@ void render(void) {
         glColor3f(0.0,0.5,0.0);
 
         // Grid drawing
+        // Note that grid is 0.5+ in y direction
         for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 7; j++) {
                         glPushMatrix();
@@ -52,9 +53,9 @@ void render(void) {
         }
         // End Grid drawing
 
-        glColor3f(0.0,0.0,0.0);
+        glColor3f(0.4,0.2,0.5);
         glPushMatrix();
-        glTranslatef(0.5,0.5,0.5);
+        glTranslatef(0.5,1,0.5);
         glutSolidCube(1);
         glPopMatrix();
 
