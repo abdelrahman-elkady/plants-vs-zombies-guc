@@ -3,6 +3,7 @@
 #include <vector>
 #include "camera.h"
 #include "tile.h"
+#include "gatherer.h"
 
 using namespace std;
 
@@ -15,7 +16,10 @@ void drawAxes();
 const int FPS = 33;
 
 
-Camera* camera = new Camera(10.0,15.0,10.0,0.0,0.0,0.0);
+Camera* camera = new Camera(0.0,4.0,4.0,0.0,0.0,0.0);
+Gatherer* gatherer1 = new Gatherer(0.0,0.0,0.0);
+Gatherer* gatherer2 = new Gatherer(1.0,0.0,0.0);
+Gatherer* gatherer3 = new Gatherer(0.0,0.0,1.0);
 
 vector< vector<Tile*> > grid;
 
@@ -31,7 +35,7 @@ void render(void) {
 
         glPushMatrix(); // camera
 
-        camera->rotateCamera(false,true,false);
+        // camera->rotateCamera(false,true,false);
         drawAxes();
 
         glColor3f(0.0,0.5,0.0);
@@ -53,11 +57,10 @@ void render(void) {
         }
         // End Grid drawing
 
-        glColor3f(0.4,0.2,0.5);
-        glPushMatrix();
-        glTranslatef(0.5,1,0.5);
-        glutSolidCube(1);
-        glPopMatrix();
+        glColor3f(1.0,0.2,0.5);
+        gatherer1->draw();
+        gatherer2->draw();
+        gatherer3->draw();
 
         glPopMatrix(); // end camera
 
