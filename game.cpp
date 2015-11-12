@@ -8,6 +8,8 @@
 using namespace std;
 
 #define SPACEBAR 32
+#define Z_KEY 122
+#define A_KEY 97
 
 void timer(int);
 void keyboardHandler(unsigned char, int, int );
@@ -16,7 +18,7 @@ void drawAxes();
 const int FPS = 33;
 
 
-Camera* camera = new Camera(0.0,4.0,4.0,0.0,0.0,0.0);
+Camera* camera = new Camera(7.0,7.0,7.0,0.0,0.0,0.0);
 Gatherer* gatherer1 = new Gatherer(0.0,0.0,0.0);
 Gatherer* gatherer2 = new Gatherer(1.0,0.0,0.0);
 Gatherer* gatherer3 = new Gatherer(0.0,0.0,1.0);
@@ -35,7 +37,7 @@ void render(void) {
 
         glPushMatrix(); // camera
 
-        // camera->rotateCamera(false,true,false);
+        camera->rotateCamera(false,true,false);
         drawAxes();
 
         glColor3f(0.0,0.5,0.0);
@@ -57,7 +59,7 @@ void render(void) {
         }
         // End Grid drawing
 
-        glColor3f(1.0,0.2,0.5);
+        glColor3f(1.0,0.1,0.1);
         gatherer1->draw();
         gatherer2->draw();
         gatherer3->draw();
@@ -69,19 +71,23 @@ void render(void) {
 
 void timer(int t) {
 
-        camera->setXAngle(camera->getXAngle() + 1);
-        camera->setYAngle(camera->getYAngle() + 1);
-        camera->setZAngle(camera->getZAngle() + 1);
+        camera->setXAngle(camera->getXAngle() + 0.5);
+        camera->setYAngle(camera->getYAngle() + 0.5);
+        camera->setZAngle(camera->getZAngle() + 0.5);
 
         if(xZoomEnabled) {
                 float val = camera->getXCoordinate();
 
-                if(val > 50 || val < 10) {
+                if(val > 30 || val < 7) {
                         xZoomUnit *= -1;
                 }
 
                 camera->setXCoordinate(val+xZoomUnit);
         }
+
+        gatherer1->update();
+        gatherer2->update();
+        gatherer3->update();
 
         glutPostRedisplay();
         glutTimerFunc(FPS, timer, 0);
@@ -95,6 +101,17 @@ void keyboardHandler(unsigned char key, int x, int y){
                 else {
                         xZoomEnabled = true;
                 }
+        }
+
+        if(key == Z_KEY) {
+                camera->setXCoordinate(camera->getXCoordinate()+0.5);
+                camera->setYCoordinate(camera->getYCoordinate()+0.5);
+                camera->setZCoordinate(camera->getZCoordinate()+0.5);
+        }
+        if(key == A_KEY) {
+                camera->setXCoordinate(camera->getXCoordinate()-0.5);
+                camera->setYCoordinate(camera->getYCoordinate()-0.5);
+                camera->setZCoordinate(camera->getZCoordinate()-0.5);
         }
 
 }

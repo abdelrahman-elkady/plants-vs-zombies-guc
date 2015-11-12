@@ -7,12 +7,13 @@
 
 class Gatherer : public Drawable {
 private:
-
+        float angle;
 public:
         Gatherer(float xCoordinate,float yCoordinate,float zCoordinate){
                 this->xCoordinate=xCoordinate;
                 this->yCoordinate=yCoordinate;
                 this->zCoordinate=zCoordinate;
+                this->angle = 0;
         }
         virtual void draw();
         virtual void update();

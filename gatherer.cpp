@@ -4,27 +4,31 @@
 using namespace std;
 
 void Gatherer::draw(){
-        glPushMatrix();
-        glTranslatef(this->xCoordinate+0.5,0.5,this->zCoordinate+0.5);// TODO: link coordinates with index on grid
+
+        glPushMatrix(); // Spring drawing
+        glTranslatef(this->xCoordinate+0.5,0.3,this->zCoordinate+0.5);// TODO: link coordinates with index on grid
         float height = 0;
         for (int i = 0; i < 200; i+=1) {
                 glPushMatrix();
+                glRotatef(this->angle,0,1,0);
                 glTranslatef(0.0,height,0.0);
-                glRotatef(7*i,0,1,0);
+                glRotatef(8*i,0,1,0);
                 glTranslatef(0.1,0.0,0.0);
-                glutSolidSphere(0.02,15,15);
-                height+=0.004;
+                glutSolidSphere(0.03,15,15);
+                height+=0.007;
                 glPopMatrix();
         }
-        glPopMatrix();
+        glPopMatrix(); // End Spring drawing
 
-        glPushMatrix();
-        glTranslatef(this->xCoordinate+0.5,0.5+height,this->zCoordinate+0.5);
-        glScalef(0.05,0.05,0.05);
+        glPushMatrix(); // Dodecahedron drawing
+        glTranslatef(this->xCoordinate+0.5,0.3+height,this->zCoordinate+0.5);
+        glRotatef(this->angle,0,1,0);
+        glScalef(0.06,0.06,0.06);
         glutSolidDodecahedron();
-        glPopMatrix();
+        glPopMatrix(); // End Dodecahedron drawing
+
 }
 
 void Gatherer::update(){
-
+        this->angle -= 2.5;
 }
