@@ -136,10 +136,18 @@ void drawAxes(void){
         glPopMatrix ();
 }
 
-int main(int argc, char** argv) {
-        glutInit(&argc, argv);
+void initLighting(){
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
+        glEnable(GL_NORMALIZE);
+        glEnable(GL_COLOR_MATERIAL);
+        glEnable(GL_SMOOTH);
+        glShadeModel(GL_SMOOTH);
+}
+
+int main(int argc, char** argv) {
+        glutInit(&argc, argv);
+
         glutInitWindowSize(800, 600);
         glutInitWindowPosition(150, 150);
 
@@ -166,6 +174,8 @@ int main(int argc, char** argv) {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         gluLookAt(0.0f, 2.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
+        initLighting();
 
         glutMainLoop();
 

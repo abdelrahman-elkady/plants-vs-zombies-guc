@@ -20,12 +20,12 @@ void Gatherer::draw(){
         }
         glPopMatrix(); // End Spring drawing
 
-        glPushMatrix(); // Dodecahedron drawing
+        glPushMatrix(); // Icosahedron drawing
         glTranslatef(this->xCoordinate+0.5,0.3+height,this->zCoordinate+0.5);
         glRotatef(this->angle,0,1,0);
-        glScalef(0.06,0.06,0.06);
-        glutSolidDodecahedron();
-        glPopMatrix(); // End Dodecahedron drawing
+        glScalef(0.12,0.12,0.12);
+        glutSolidIcosahedron();
+        glPopMatrix(); // End Icosahedron drawing
 
 }
 
