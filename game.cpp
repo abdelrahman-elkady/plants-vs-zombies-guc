@@ -4,6 +4,9 @@
 #include "camera.h"
 #include "tile.h"
 #include "gatherer.h"
+#include "defender.h"
+#include "bullet.h"
+#include "appconstants.h"
 
 using namespace std;
 
@@ -22,6 +25,8 @@ Camera* camera = new Camera(7.0,7.0,7.0,0.0,0.0,0.0);
 Gatherer* gatherer1 = new Gatherer(0.0,0.0,0.0);
 Gatherer* gatherer2 = new Gatherer(1.0,0.0,0.0);
 Gatherer* gatherer3 = new Gatherer(0.0,0.0,1.0);
+Defender* defender1 = new Defender(2.0,0.0,0.0);
+Bullet* bullet = new Bullet(2.0,0.0,0.0);
 
 vector< vector<Tile*> > grid;
 
@@ -37,7 +42,7 @@ void render(void) {
 
         glPushMatrix(); // camera
 
-        camera->rotateCamera(false,true,false);
+        // camera->rotateCamera(false,true,false);
         drawAxes();
 
         glColor3f(0.0,0.5,0.0);
@@ -63,6 +68,8 @@ void render(void) {
         gatherer1->draw();
         gatherer2->draw();
         gatherer3->draw();
+        defender1->draw();
+        bullet->draw();
 
         glPopMatrix(); // end camera
 
@@ -88,6 +95,7 @@ void timer(int t) {
         gatherer1->update();
         gatherer2->update();
         gatherer3->update();
+        bullet->update();
 
         glutPostRedisplay();
         glutTimerFunc(FPS, timer, 0);

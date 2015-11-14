@@ -23,7 +23,7 @@ void Gatherer::draw(){
         glPushMatrix(); // Icosahedron drawing
         glTranslatef(this->xCoordinate+0.5,0.3+height,this->zCoordinate+0.5);
         glRotatef(this->angle,0,1,0);
-        glScalef(0.12,0.12,0.12);
+        glScalef(0.17,0.17,0.17);
         glutSolidIcosahedron();
         glPopMatrix(); // End Icosahedron drawing
 
