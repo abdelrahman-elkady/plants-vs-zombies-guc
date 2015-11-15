@@ -8,6 +8,7 @@
 #include "gatherer.h"
 #include "defender.h"
 #include "bullet.h"
+#include "attacker.h"
 #include "appconstants.h"
 
 using namespace std;
@@ -19,12 +20,13 @@ void drawAxes();
 const int FPS = 33;
 
 
-Camera* camera = new Camera(7.0,7.0,7.0,0.0,0.0,0.0);
+Camera* camera = new Camera(7.0,4.0,7.0,0.0,0.0,0.0);
 Gatherer* gatherer1 = new Gatherer(0.0,0.0,0.0);
 Gatherer* gatherer2 = new Gatherer(1.0,0.0,0.0);
 Gatherer* gatherer3 = new Gatherer(0.0,0.0,1.0);
 Defender* defender1 = new Defender(2.0,0.0,0.0);
 Defender* defender2 = new Defender(2.0,0.0,4.0);
+Attacker* attacker1 = new Attacker(2);
 
 Tile grid[5][7];
 
@@ -39,9 +41,10 @@ void render(void) {
         camera->activate();
 
         glPushMatrix(); // camera
-
         camera->rotateCamera(false,true,false);
         drawAxes();
+
+        glTranslatef(-3.5,0.0,-2.5);
 
         glColor3f(0.0,0.5,0.0);
 
@@ -177,7 +180,7 @@ int main(int argc, char** argv) {
         grid[1][0].drawableObject = gatherer3;
         grid[0][2].drawableObject = defender1;
         grid[4][2].drawableObject = defender2;
-
+        grid[2][0].drawableObject = attacker1;
         glutMainLoop();
 
         return 0;
