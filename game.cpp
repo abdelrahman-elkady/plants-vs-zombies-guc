@@ -12,10 +12,6 @@
 
 using namespace std;
 
-#define SPACEBAR 32
-#define Z_KEY 122
-#define A_KEY 97
-
 void timer(int);
 void keyboardHandler(unsigned char, int, int );
 void drawAxes();
@@ -32,7 +28,7 @@ Defender* defender2 = new Defender(2.0,0.0,4.0);
 
 Tile grid[5][7];
 
-bool xZoomEnabled = false;
+bool paused = false;
 
 float xZoomUnit = 0.2;
 
@@ -82,24 +78,18 @@ void render(void) {
 
 void timer(int t) {
 
-        camera->setXAngle(camera->getXAngle() + 0.5);
-        camera->setYAngle(camera->getYAngle() + 0.5);
-        camera->setZAngle(camera->getZAngle() + 0.5);
+        if(!paused) {
 
-        if(xZoomEnabled) {
-                float val = camera->getXCoordinate();
+                camera->setXAngle(camera->getXAngle() + 0.5);
+                camera->setYAngle(camera->getYAngle() + 0.5);
+                camera->setZAngle(camera->getZAngle() + 0.5);
 
-                if(val > 30 || val < 7) {
-                        xZoomUnit *= -1;
-                }
 
-                camera->setXCoordinate(val+xZoomUnit);
-        }
-
-        for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 7; j++) {
-                        if(grid[i][j].drawableObject != NULL) {
-                                grid[i][j].drawableObject->update();
+                for (int i = 0; i < 5; i++) {
+                        for (int j = 0; j < 7; j++) {
+                                if(grid[i][j].drawableObject != NULL) {
+                                        grid[i][j].drawableObject->update();
+                                }
                         }
                 }
         }
@@ -109,14 +99,6 @@ void timer(int t) {
 }
 
 void keyboardHandler(unsigned char key, int x, int y){
-        if(key == SPACEBAR) {
-                if(xZoomEnabled) {
-                        xZoomEnabled = false;
-                }
-                else {
-                        xZoomEnabled = true;
-                }
-        }
 
         if(key == Z_KEY) {
                 camera->setXCoordinate(camera->getXCoordinate()+0.5);
@@ -127,6 +109,10 @@ void keyboardHandler(unsigned char key, int x, int y){
                 camera->setXCoordinate(camera->getXCoordinate()-0.5);
                 camera->setYCoordinate(camera->getYCoordinate()-0.5);
                 camera->setZCoordinate(camera->getZCoordinate()-0.5);
+        }
+
+        if(key == P_KEY) {
+                paused = !paused;
         }
 
 }
