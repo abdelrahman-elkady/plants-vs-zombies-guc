@@ -23,9 +23,18 @@ void Defender::draw(){
         gluCylinder(quadObject,0.09,0.09,0.9,15,15);
         glPopMatrix(); // End Cylinder
 
-        cout <<xCoordinate<<endl;
+        if(this->bulletTimer > 4500) { // bullet every 4.5 seconds
+                this->bulletTimer = 0;
+                this->bullet->xCoordinate = this->xCoordinate;
+                this->bullet->visible = true;
+        }
+
+        this->bullet->draw();
+
 }
 
 void Defender::update(){
-        bulletTimer += 33;
+        this->bulletTimer += 33;
+        this->bullet->update();
+        cout << bulletTimer <<endl;
 }
