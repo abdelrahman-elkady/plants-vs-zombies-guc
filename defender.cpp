@@ -36,5 +36,4 @@ void Defender::draw(){
 void Defender::update(){
         this->bulletTimer += 33;
         this->bullet->update();
-        cout << bulletTimer <<endl;
 }

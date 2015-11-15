@@ -1,5 +1,6 @@
 #include <GL/glut.h>
 #include <iostream>
+#include "drawable.h"
 
 #ifndef TILE_H
 #define  TILE_H
@@ -8,6 +9,7 @@ class Tile {
 private:
         float width,height;
 public:
+        Drawable* drawableObject;
 
         Tile(float width=1,float height=1) {
                 this->width = width;

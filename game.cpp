@@ -1,6 +1,8 @@
 #include <GL/glut.h>
 #include <iostream>
 #include <vector>
+#include <stddef.h>
+
 #include "camera.h"
 #include "tile.h"
 #include "gatherer.h"
@@ -28,7 +30,7 @@ Gatherer* gatherer3 = new Gatherer(0.0,0.0,1.0);
 Defender* defender1 = new Defender(2.0,0.0,0.0);
 Defender* defender2 = new Defender(2.0,0.0,4.0);
 
-vector< vector<Tile*> > grid;
+Tile grid[5][7];
 
 bool xZoomEnabled = false;
 
@@ -42,7 +44,7 @@ void render(void) {
 
         glPushMatrix(); // camera
 
-        // camera->rotateCamera(false,true,false);
+        camera->rotateCamera(false,true,false);
         drawAxes();
 
         glColor3f(0.0,0.5,0.0);
@@ -58,18 +60,20 @@ void render(void) {
                         }else{
                                 glColor3f(0.0,0.5,0.0);
                         }
-                        grid[i][j]->draw();
+                        grid[i][j].draw();
                         glPopMatrix();
                 }
         }
         // End Grid drawing
 
         glColor3f(1.0,0.1,0.1);
-        gatherer1->draw();
-        gatherer2->draw();
-        gatherer3->draw();
-        defender1->draw();
-        defender2->draw();
+        for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 7; j++) {
+                        if(grid[i][j].drawableObject != NULL) {
+                                grid[i][j].drawableObject->draw();
+                        }
+                }
+        }
 
         glPopMatrix(); // end camera
 
@@ -92,11 +96,13 @@ void timer(int t) {
                 camera->setXCoordinate(val+xZoomUnit);
         }
 
-        gatherer1->update();
-        gatherer2->update();
-        gatherer3->update();
-        defender1->update();
-        defender2->update();
+        for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 7; j++) {
+                        if(grid[i][j].drawableObject != NULL) {
+                                grid[i][j].drawableObject->update();
+                        }
+                }
+        }
 
         glutPostRedisplay();
         glutTimerFunc(FPS, timer, 0);
@@ -168,12 +174,6 @@ int main(int argc, char** argv) {
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
         glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-
-        grid.resize(5);
-        for (int i = 0; i < 5; ++i) {
-                grid[i].resize(7, new Tile());
-        }
-
         glEnable(GL_DEPTH_TEST);
 
         glMatrixMode(GL_PROJECTION);
@@ -185,6 +185,12 @@ int main(int argc, char** argv) {
         gluLookAt(0.0f, 2.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
         initLighting();
+
+        grid[0][0].drawableObject = gatherer1;
+        grid[0][1].drawableObject = gatherer2;
+        grid[1][0].drawableObject = gatherer3;
+        grid[0][2].drawableObject = defender1;
+        grid[4][2].drawableObject = defender2;
 
         glutMainLoop();
 
