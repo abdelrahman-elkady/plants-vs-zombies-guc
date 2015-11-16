@@ -13,7 +13,7 @@ using namespace std;
 #define P_KEY 112
 
 const int GRID_MAX_CELL_LENGTH = 4;
-const int GRID_MAX_CELL_WIDTH = 6;
+const int GRID_MAX_CELL_WIDTH = 8;
 
 
 

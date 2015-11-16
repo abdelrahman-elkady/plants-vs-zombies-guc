@@ -20,6 +20,6 @@ void Bullet::update(){
         if(this->xCoordinate - 0.5 > GRID_MAX_CELL_WIDTH) {
                 this->visible = false;
         }else {
-                this->xCoordinate += 0.06;
+                this->xCoordinate += 0.07;
         }
 }

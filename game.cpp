@@ -14,7 +14,7 @@
 using namespace std;
 
 void timer(int);
-void keyboardHandler(unsigned char, int, int );
+void keyboardHandler(unsigned char, int, int);
 void drawAxes();
 
 const int FPS = 33;
@@ -27,8 +27,9 @@ Gatherer* gatherer3 = new Gatherer(0.0,0.0,1.0);
 Defender* defender1 = new Defender(2.0,0.0,0.0);
 Defender* defender2 = new Defender(2.0,0.0,4.0);
 Attacker* attacker1 = new Attacker(2);
+Attacker* attacker2 = new Attacker(3);
 
-Tile grid[5][7];
+Tile grid[5][9];
 
 bool paused = false;
 
@@ -44,14 +45,14 @@ void render(void) {
         camera->rotateCamera(false,true,false);
         drawAxes();
 
-        glTranslatef(-3.5,0.0,-2.5);
+        glTranslatef(-4.5,0.0,-2.5); // Translating the whole scene
 
         glColor3f(0.0,0.5,0.0);
 
         // Grid drawing
         // Note that grid is 0.5+ in y direction
         for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 7; j++) {
+                for (int j = 0; j < 9; j++) {
                         glPushMatrix();
                         glTranslatef(j,0,i);
                         if((i%2==0 && j%2 ==0) || (i%2==1 && j%2 ==1)) {
@@ -67,7 +68,7 @@ void render(void) {
 
         glColor3f(1.0,0.1,0.1);
         for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 7; j++) {
+                for (int j = 0; j < 9; j++) {
                         if(grid[i][j].drawableObject != NULL) {
                                 grid[i][j].drawableObject->draw();
                         }
@@ -89,7 +90,7 @@ void timer(int t) {
 
 
                 for (int i = 0; i < 5; i++) {
-                        for (int j = 0; j < 7; j++) {
+                        for (int j = 0; j < 9; j++) {
                                 if(grid[i][j].drawableObject != NULL) {
                                         grid[i][j].drawableObject->update();
                                 }
@@ -181,6 +182,7 @@ int main(int argc, char** argv) {
         grid[0][2].drawableObject = defender1;
         grid[4][2].drawableObject = defender2;
         grid[2][0].drawableObject = attacker1;
+        grid[3][0].drawableObject = attacker2;
         glutMainLoop();
 
         return 0;
