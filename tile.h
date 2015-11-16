@@ -10,10 +10,12 @@ private:
         float width,height;
 public:
         Drawable* drawableObject;
+        bool highlighted;
 
         Tile(float width=1,float height=1) {
                 this->width = width;
                 this->height = height;
+                this->highlighted = false;
         }
 
         void draw();

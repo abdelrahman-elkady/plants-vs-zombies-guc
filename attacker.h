@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include <iostream>
 #include "drawable.h"
-#include "appconstants.h"
+#include "utils.h"
 
 #ifndef ATTAKER_H
 #define  ATTAKER_H

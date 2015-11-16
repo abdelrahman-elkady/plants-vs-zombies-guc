@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include <iostream>
 #include "attacker.h"
-#include "appconstants.h"
+#include "utils.h"
 using namespace std;
 
 void Attacker::draw(){

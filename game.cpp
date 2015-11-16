@@ -9,7 +9,7 @@
 #include "defender.h"
 #include "bullet.h"
 #include "attacker.h"
-#include "appconstants.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -21,17 +21,15 @@ const int FPS = 33;
 
 
 Camera* camera = new Camera(7.0,4.0,7.0,0.0,0.0,0.0);
-Gatherer* gatherer1 = new Gatherer(0.0,0.0,0.0);
-Gatherer* gatherer2 = new Gatherer(1.0,0.0,0.0);
-Gatherer* gatherer3 = new Gatherer(0.0,0.0,1.0);
-Defender* defender1 = new Defender(2.0,0.0,0.0);
-Defender* defender2 = new Defender(2.0,0.0,4.0);
-Attacker* attacker1 = new Attacker(2);
-Attacker* attacker2 = new Attacker(3);
 
 Tile grid[5][9];
 
 bool paused = false;
+
+int selectionMode = ROW_SELECTION;
+
+int selectedRow = -1;
+int selectedColumn = -1;
 
 float xZoomUnit = 0.2;
 
@@ -55,11 +53,16 @@ void render(void) {
                 for (int j = 0; j < 9; j++) {
                         glPushMatrix();
                         glTranslatef(j,0,i);
-                        if((i%2==0 && j%2 ==0) || (i%2==1 && j%2 ==1)) {
+
+                        if(grid[i][j].highlighted) {
+                                glColor3f(0.2387,0.77,0.7346);
+                        }
+                        else if((i%2==0 && j%2 ==0) || (i%2==1 && j%2 ==1)) {
                                 glColor3f(0.0,0.4,0.0);
                         }else{
                                 glColor3f(0.0,0.5,0.0);
                         }
+
                         grid[i][j].draw();
                         glPopMatrix();
                 }
@@ -119,7 +122,42 @@ void keyboardHandler(unsigned char key, int x, int y){
                 paused = !paused;
         }
 
+        if(selectionMode == ROW_SELECTION) {
+                if(key >= NUM_1 && key <= NUM_5) {
+                        selectedRow = keyToNumeric(key) - 1;
+                        selectionMode = COLUMN_SELECTION;
+                }
+        } else if (selectionMode == COLUMN_SELECTION) {
+                if(key >= NUM_1 && key <= NUM_9) {
+                        selectedColumn = keyToNumeric(key) - 1;
+                        selectionMode = TYPE_SELECTION;
+                        grid[selectedRow][selectedColumn].highlighted = true;
+                }
+        }else if (selectionMode == TYPE_SELECTION) {
+                if(key == D_KEY) {
+                        grid[selectedRow][selectedColumn].drawableObject = new Defender(selectedColumn,0,selectedRow);
+                        selectionMode = ROW_SELECTION;
+                        grid[selectedRow][selectedColumn].highlighted = false;
+                        selectedRow = -1;
+                        selectedColumn = -1;
+                } else if (key == R_KEY) {
+                        grid[selectedRow][selectedColumn].drawableObject = new Gatherer(selectedColumn,0,selectedRow);
+                        selectionMode = ROW_SELECTION;
+                        grid[selectedRow][selectedColumn].highlighted = false;
+                        selectedRow = -1;
+                        selectedColumn = -1;
+                } else if (key == C_KEY) {
+                        grid[selectedRow][selectedColumn].drawableObject = NULL;
+                        selectionMode = ROW_SELECTION;
+                        grid[selectedRow][selectedColumn].highlighted = false;
+                        selectedRow = -1;
+                        selectedColumn = -1;
+                }
+        }
+
 }
+
+
 
 void drawAxes(void){
         glPushMatrix();
@@ -176,13 +214,6 @@ int main(int argc, char** argv) {
 
         initLighting();
 
-        grid[0][0].drawableObject = gatherer1;
-        grid[0][1].drawableObject = gatherer2;
-        grid[1][0].drawableObject = gatherer3;
-        grid[0][2].drawableObject = defender1;
-        grid[4][2].drawableObject = defender2;
-        grid[2][0].drawableObject = attacker1;
-        grid[3][0].drawableObject = attacker2;
         glutMainLoop();
 
         return 0;
