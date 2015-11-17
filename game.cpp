@@ -23,7 +23,7 @@ const int FPS = 33;
 Camera* camera = new Camera(7.0,4.0,7.0,0.0,0.0,0.0);
 
 Tile grid[5][9];
-
+vector<Attacker*> attackers;
 bool paused = false;
 
 int selectionMode = ROW_SELECTION;
@@ -32,7 +32,7 @@ int selectedRow = -1;
 int selectedColumn = -1;
 
 float xZoomUnit = 0.2;
-
+float spawnTimer = 0;
 void render(void) {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -78,13 +78,18 @@ void render(void) {
                 }
         }
 
+        for(unsigned int i = 0; i != attackers.size(); i++) {
+                if(attackers.at(i) != NULL) {
+                        attackers.at(i)->draw();
+                }
+        }
+
         glPopMatrix(); // end camera
 
         glutSwapBuffers();
 }
 
 void timer(int t) {
-
         if(!paused) {
 
                 camera->setXAngle(camera->getXAngle() + 0.5);
@@ -99,6 +104,18 @@ void timer(int t) {
                                 }
                         }
                 }
+
+                for(unsigned int i = 0; i != attackers.size(); i++) {
+                        if(attackers.at(i) != NULL) {
+                                attackers.at(i)->update();
+                        }
+                }
+
+                if(spawnTimer > 8000 + generateRandom(0,2000)) { // Random generation period ( +- 2 seconds )
+                        attackers.push_back(new Attacker(generateRandom(0,4)));
+                        spawnTimer = 0;
+                }
+                spawnTimer += 33;
         }
 
         glutPostRedisplay();

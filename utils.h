@@ -58,4 +58,8 @@ inline int keyToNumeric(unsigned char key) {
         }
 }
 
+inline int generateRandom(int min,int max){
+  return int(min + (rand() % (int)(max - min + 1)));
+}
+
 #endif
