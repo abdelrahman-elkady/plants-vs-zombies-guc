@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <stddef.h>
+#include "math.h"
 
 #include "camera.h"
 #include "tile.h"
@@ -19,7 +20,7 @@ void drawAxes();
 bool checkBulletCollision(Bullet*,Attacker*);
 
 const int FPS = 33;
-
+int s = 0;
 
 Camera* camera = new Camera(7.0,4.0,7.0,0.0,0.0,0.0);
 
@@ -32,7 +33,6 @@ int selectionMode = ROW_SELECTION;
 int selectedRow = -1;
 int selectedColumn = -1;
 
-float xZoomUnit = 0.2;
 float spawnTimer = 0;
 void render(void) {
 
@@ -81,6 +81,7 @@ void render(void) {
 
         for(unsigned int i = 0; i != attackers.size(); i++) {
                 if(attackers.at(i) != NULL) {
+                        glColor3f(attackers.at(i)->health/3.0,0.0,0.0);
                         attackers.at(i)->draw();
                 }
         }
@@ -112,6 +113,9 @@ void timer(int t) {
                                         int lane = int((attackers.at(i))->zCoordinate);
                                         if(dynamic_cast<Defender*>(grid[lane][j].drawableObject) != NULL ) {
                                                 checkBulletCollision((dynamic_cast<Defender*>(grid[lane][j].drawableObject))->bullet,attackers.at(i));
+                                                if(attackers.at(i)->health <= 0) {
+                                                        attackers.erase(attackers.begin() + i);
+                                                }
                                         }
                                 }
                         }
@@ -187,8 +191,9 @@ void keyboardHandler(unsigned char key, int x, int y){
 }
 
 bool checkBulletCollision(Bullet* bullet,Attacker* attacker) {
-        if ((bullet->zCoordinate) == (attacker->zCoordinate)) {
-                cout << "WOOOOO" << endl;
+        if ( bullet->visible && (bullet->zCoordinate) == (attacker->zCoordinate) && fabs(bullet->xCoordinate - attacker->xCoordinate) <= 0.2 ) {
+                bullet->visible = false;
+                attacker->health--;
         }
         return false;
 }

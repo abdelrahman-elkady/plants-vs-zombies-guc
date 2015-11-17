@@ -63,7 +63,7 @@ void Attacker::draw(){
 
 void Attacker::update(){
         this->xCoordinate -= 0.01;
-        this->angle +=5;
+        this->angle += 5;
 }
 
 void Attacker::drawWheel(){
