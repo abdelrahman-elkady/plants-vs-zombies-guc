@@ -1,11 +1,13 @@
-#include <iostream>
-#include <string>
-#include <GL/glut.h>
-using namespace std;
-
 #ifndef APP_CONSTANTS_H
 #define  APP_CONSTANTS_H
 
+#include <iostream>
+#include <string>
+#include <GL/glut.h>
+
+using namespace std;
+
+#include "bullet.h"
 
 #define SPACEBAR 32
 #define Z_KEY 122
@@ -59,7 +61,7 @@ inline int keyToNumeric(unsigned char key) {
 }
 
 inline int generateRandom(int min,int max){
-  return int(min + (rand() % (int)(max - min + 1)));
+        return int(min + (rand() % (int)(max - min + 1)));
 }
 
 #endif

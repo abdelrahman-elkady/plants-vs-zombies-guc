@@ -1,10 +1,10 @@
+#ifndef ATTACKER_H
+#define  ATTACKER_H
+
 #include <GL/glut.h>
 #include <iostream>
 #include "drawable.h"
 #include "utils.h"
-
-#ifndef ATTAKER_H
-#define  ATTAKER_H
 
 class Attacker : public Drawable {
 private:

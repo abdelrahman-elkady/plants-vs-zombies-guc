@@ -1,9 +1,9 @@
+#ifndef TILE_H
+#define  TILE_H
+
 #include <GL/glut.h>
 #include <iostream>
 #include "drawable.h"
-
-#ifndef TILE_H
-#define  TILE_H
 
 class Tile {
 private:

@@ -16,6 +16,7 @@ using namespace std;
 void timer(int);
 void keyboardHandler(unsigned char, int, int);
 void drawAxes();
+bool checkBulletCollision(Bullet*,Attacker*);
 
 const int FPS = 33;
 
@@ -107,6 +108,17 @@ void timer(int t) {
 
                 for(unsigned int i = 0; i != attackers.size(); i++) {
                         if(attackers.at(i) != NULL) {
+                                for (int j = 0; j < 8; j++) {
+                                        int lane = int((attackers.at(i))->zCoordinate);
+                                        if(dynamic_cast<Defender*>(grid[lane][j].drawableObject) != NULL ) {
+                                                checkBulletCollision((dynamic_cast<Defender*>(grid[lane][j].drawableObject))->bullet,attackers.at(i));
+                                        }
+                                }
+                        }
+                }
+
+                for(unsigned int i = 0; i != attackers.size(); i++) {
+                        if(attackers.at(i) != NULL) {
                                 attackers.at(i)->update();
                         }
                 }
@@ -174,7 +186,12 @@ void keyboardHandler(unsigned char key, int x, int y){
 
 }
 
-
+bool checkBulletCollision(Bullet* bullet,Attacker* attacker) {
+        if ((bullet->zCoordinate) == (attacker->zCoordinate)) {
+                cout << "WOOOOO" << endl;
+        }
+        return false;
+}
 
 void drawAxes(void){
         glPushMatrix();
