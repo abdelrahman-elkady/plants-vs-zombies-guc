@@ -114,7 +114,10 @@ void timer(int t) {
                                         if(dynamic_cast<Defender*>(grid[lane][j].drawableObject) != NULL ) {
                                                 checkBulletCollision((dynamic_cast<Defender*>(grid[lane][j].drawableObject))->bullet,attackers.at(i));
                                                 if(attackers.at(i)->health <= 0) {
-                                                        attackers.erase(attackers.begin() + i);
+                                                        attackers.at(i)->visible = false;
+                                                        if(attackers.size() > 1) {
+                                                                attackers.erase(attackers.begin() + i);
+                                                        }
                                                 }
                                         }
                                 }

@@ -6,7 +6,9 @@ using namespace std;
 
 void Attacker::draw(){
 
-
+        if(!this->visible) {
+          return;
+        }
         // Start wheels
 
         glPushMatrix();
