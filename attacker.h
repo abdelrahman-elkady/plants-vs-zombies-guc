@@ -21,6 +21,14 @@ public:
                 this->angle=0;
                 this->visible = true;
         }
+        Attacker(){
+                this->xCoordinate=GRID_MAX_CELL_WIDTH;
+                this->yCoordinate=0.8;
+                this->zCoordinate=0;
+                this->health = 3;
+                this->angle=0;
+                this->visible = false;
+        }
         virtual void draw();
         virtual void update();
 };

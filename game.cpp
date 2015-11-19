@@ -20,12 +20,13 @@ void drawAxes();
 bool checkBulletCollision(Bullet*,Attacker*);
 
 const int FPS = 33;
-int s = 0;
+int kills = 0;
 
 Camera* camera = new Camera(7.0,4.0,7.0,0.0,0.0,0.0);
 
 Tile grid[5][9];
-vector<Attacker*> attackers;
+Attacker* attackers[50];
+
 bool paused = false;
 
 int selectionMode = ROW_SELECTION;
@@ -79,10 +80,10 @@ void render(void) {
                 }
         }
 
-        for(unsigned int i = 0; i != attackers.size(); i++) {
-                if(attackers.at(i) != NULL) {
-                        glColor3f(attackers.at(i)->health/3.0,0.0,0.0);
-                        attackers.at(i)->draw();
+        for(unsigned int i = 0; i < 50; i++) {
+                if(attackers[i] != NULL) {
+                        glColor3f(attackers[i]->health/3.0,0.0,0.0);
+                        attackers[i]->draw();
                 }
         }
 
@@ -107,16 +108,16 @@ void timer(int t) {
                         }
                 }
 
-                for(unsigned int i = 0; i != attackers.size(); i++) {
-                        if(attackers.at(i) != NULL) {
+                for(unsigned int i = 0; i < 50; i++) {
+                        if(attackers[i] != NULL) {
                                 for (int j = 0; j < 8; j++) {
-                                        int lane = int((attackers.at(i))->zCoordinate);
+                                        int lane = int((attackers[i])->zCoordinate);
                                         if(dynamic_cast<Defender*>(grid[lane][j].drawableObject) != NULL ) {
-                                                checkBulletCollision((dynamic_cast<Defender*>(grid[lane][j].drawableObject))->bullet,attackers.at(i));
-                                                if(attackers.at(i)->health <= 0) {
-                                                        attackers.at(i)->visible = false;
-                                                        if(attackers.size() > 1) {
-                                                                attackers.erase(attackers.begin() + i);
+                                                if(checkBulletCollision((dynamic_cast<Defender*>(grid[lane][j].drawableObject))->bullet,attackers[i])) {
+                                                        if(attackers[i]->health <= 0) {
+                                                                kills++;
+                                                                cout <<kills<<endl;
+                                                                attackers[i]->visible = false;
                                                         }
                                                 }
                                         }
@@ -124,15 +125,21 @@ void timer(int t) {
                         }
                 }
 
-                for(unsigned int i = 0; i != attackers.size(); i++) {
-                        if(attackers.at(i) != NULL) {
-                                attackers.at(i)->update();
+                for(unsigned int i = 0; i < 50; i++) {
+                        if(attackers[i] != NULL) {
+                                attackers[i]->update();
                         }
                 }
 
                 if(spawnTimer > 8000 + generateRandom(0,2000)) { // Random generation period ( +- 2 seconds )
-                        attackers.push_back(new Attacker(generateRandom(0,4)));
-                        spawnTimer = 0;
+                        for (int i = 0; i < 50; i++) {
+                                if(attackers[i] == NULL || !attackers[i]->visible) {
+                                        attackers[i] = new Attacker(generateRandom(0,4));
+                                        spawnTimer = 0;
+                                        break;
+                                }
+                        }
+
                 }
                 spawnTimer += 33;
         }
@@ -194,9 +201,10 @@ void keyboardHandler(unsigned char key, int x, int y){
 }
 
 bool checkBulletCollision(Bullet* bullet,Attacker* attacker) {
-        if ( bullet->visible && (bullet->zCoordinate) == (attacker->zCoordinate) && fabs(bullet->xCoordinate - attacker->xCoordinate) <= 0.2 ) {
+        if (bullet->visible && attacker->visible && (bullet->zCoordinate) == (attacker->zCoordinate) && fabs(bullet->xCoordinate - attacker->xCoordinate) <= 0.2 ) {
                 bullet->visible = false;
                 attacker->health--;
+                return true;
         }
         return false;
 }
