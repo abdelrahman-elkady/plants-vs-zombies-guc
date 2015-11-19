@@ -18,6 +18,7 @@ void timer(int);
 void keyboardHandler(unsigned char, int, int);
 void drawAxes();
 bool checkBulletCollision(Bullet*,Attacker*);
+bool checkUnitCollision(Drawable*, Attacker*);
 
 const int FPS = 33;
 int kills = 0;
@@ -121,6 +122,12 @@ void timer(int t) {
                                                         }
                                                 }
                                         }
+
+                                        if(grid[lane][j].drawableObject != NULL) {
+                                                if(checkUnitCollision((grid[lane][j].drawableObject),attackers[i])) {
+                                                        grid[lane][j].drawableObject = NULL;
+                                                }
+                                        }
                                 }
                         }
                 }
@@ -204,6 +211,13 @@ bool checkBulletCollision(Bullet* bullet,Attacker* attacker) {
         if (bullet->visible && attacker->visible && (bullet->zCoordinate) == (attacker->zCoordinate) && fabs(bullet->xCoordinate - attacker->xCoordinate) <= 0.2 ) {
                 bullet->visible = false;
                 attacker->health--;
+                return true;
+        }
+        return false;
+}
+
+bool checkUnitCollision(Drawable* object, Attacker* attacker) {
+        if(attacker->visible && attacker->zCoordinate == object->zCoordinate && fabs(attacker->xCoordinate - object->xCoordinate) <= 0.3 ) {
                 return true;
         }
         return false;
