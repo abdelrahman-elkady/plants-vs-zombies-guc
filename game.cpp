@@ -1,6 +1,8 @@
 #include <GL/glut.h>
 #include <iostream>
 #include <vector>
+#include <string>
+#include <sstream>
 #include <stddef.h>
 #include "math.h"
 
@@ -19,6 +21,7 @@ void keyboardHandler(unsigned char, int, int);
 void drawAxes();
 bool checkBulletCollision(Bullet*,Attacker*);
 bool checkUnitCollision(Drawable*, Attacker*);
+void drawBitmapText(string, float, float, float);
 
 const int FPS = 33;
 
@@ -37,11 +40,27 @@ int selectedColumn = -1;
 
 float spawnTimer = 0;
 int kills = 0;
-int resources = 500;
+float resources = 500;
 int lanesDestroyed = 0;
+int resourceGatherers=0;
+
+
+namespace patch
+{
+template < typename T > std::string to_string( const T& n )
+{
+        std::ostringstream stm;
+        stm << n;
+        return stm.str();
+}
+}
+
+
 void render(void) {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        drawBitmapText("Resources " + patch::to_string(int(resources)), 0.5, 11.5, 0);
 
         camera->activate();
 
@@ -110,7 +129,6 @@ void timer(int t) {
                         camera->setZAngle(0.0);
                 }
 
-                cout << resources << endl;
 
                 for (int i = 0; i < 5; i++) {
                         for (int j = 0; j < 9; j++) {
@@ -157,6 +175,9 @@ void timer(int t) {
 
                                         if(grid[lane][j].drawableObject != NULL) {
                                                 if(checkUnitCollision((grid[lane][j].drawableObject),attackers[i])) {
+                                                        if(dynamic_cast<Gatherer*>(grid[lane][j].drawableObject) != NULL) {
+                                                                resourceGatherers--;
+                                                        }
                                                         grid[lane][j].drawableObject = NULL;
                                                 }
                                         }
@@ -181,7 +202,11 @@ void timer(int t) {
                         }
 
                 }
+
+                resources += 0.15 * resourceGatherers;
+
                 spawnTimer += 33;
+
         }
 
         glutPostRedisplay();
@@ -228,6 +253,7 @@ void keyboardHandler(unsigned char key, int x, int y){
                         selectedColumn = -1;
                 } else if (key == R_KEY && !grid[selectedRow][selectedColumn].destroyed && resources >= 100 && grid[selectedRow][selectedColumn].drawableObject == NULL) {
                         grid[selectedRow][selectedColumn].drawableObject = new Gatherer(selectedColumn,0,selectedRow);
+                        resourceGatherers++;
                         resources -= 100;
                         selectionMode = ROW_SELECTION;
                         grid[selectedRow][selectedColumn].highlighted = false;
@@ -283,6 +309,39 @@ void drawAxes(void){
         glEnd();
 
         glPopMatrix ();
+}
+
+
+
+void drawBitmapText(string text, float x, float y, float z)
+{
+        glDisable(GL_TEXTURE_2D);
+        glMatrixMode( GL_PROJECTION );
+        glPushMatrix();
+        glLoadIdentity();
+        gluOrtho2D(0.0, 800, 0.0, 600);
+        glMatrixMode( GL_MODELVIEW );
+        glPushMatrix();
+        glLoadIdentity();
+
+        glDisable( GL_DEPTH_TEST );
+        glDisable(GL_LIGHTING);
+
+        glColor3f(1.0, 0.0, 0.0);
+        glRasterPos2i(x*50, y*50);
+
+        for (unsigned int i = 0; i < text.size(); i++)
+        {
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, text[i]);
+        }
+
+        glEnable( GL_DEPTH_TEST );
+        glEnable(GL_LIGHTING);
+        glMatrixMode( GL_PROJECTION );
+        glPopMatrix();
+        glMatrixMode( GL_MODELVIEW );
+        glPopMatrix();
+
 }
 
 void initLighting(){

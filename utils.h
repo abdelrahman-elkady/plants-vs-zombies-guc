@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <stdio.h>
 #include <GL/glut.h>
 
 using namespace std;
