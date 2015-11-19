@@ -32,6 +32,7 @@ Attacker* attackers[50];
 
 bool paused = false;
 bool cinematic = false;
+bool gameOver = false;
 
 int selectionMode = ROW_SELECTION;
 
@@ -60,63 +61,72 @@ void render(void) {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        drawBitmapText("Resources " + patch::to_string(int(resources)), 0.5, 11.5, 0);
+        if(!gameOver) {
+                drawBitmapText("Resources " + patch::to_string(int(resources)), 0.5, 11.5, 0);
 
-        camera->activate();
+                camera->activate();
 
-        glPushMatrix(); // camera
-        if(cinematic) {
-                camera->rotateCamera(false,true,false);
-        }
-        drawAxes();
-
-        glTranslatef(-4.5,0.0,-2.5); // Translating the whole scene
-
-        glColor3f(0.0,0.5,0.0);
-
-        // Grid drawing
-        // Note that grid is 0.5+ in y direction
-        for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 9; j++) {
-                        glPushMatrix();
-                        glTranslatef(j,0,i);
-
-                        if(grid[i][j].highlighted) {
-                                glColor3f(0.2387,0.77,0.7346);
-                        }
-                        else if((i%2==0 && j%2 ==0) || (i%2==1 && j%2 ==1)) {
-                                glColor3f(0.0,0.4,0.0);
-                        }else{
-                                glColor3f(0.0,0.5,0.0);
-                        }
-
-                        grid[i][j].draw();
-                        glPopMatrix();
+                glPushMatrix(); // camera
+                if(cinematic) {
+                        camera->rotateCamera(false,true,false);
                 }
-        }
-        // End Grid drawing
+                drawAxes();
 
-        glColor3f(1.0,0.1,0.1);
-        for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 9; j++) {
-                        if(grid[i][j].drawableObject != NULL) {
-                                grid[i][j].drawableObject->draw();
+                glTranslatef(-4.5,0.0,-2.5); // Translating the whole scene
+
+                glColor3f(0.0,0.5,0.0);
+
+                // Grid drawing
+                // Note that grid is 0.5+ in y direction
+                for (int i = 0; i < 5; i++) {
+                        for (int j = 0; j < 9; j++) {
+                                glPushMatrix();
+                                glTranslatef(j,0,i);
+
+                                if(grid[i][j].highlighted) {
+                                        glColor3f(0.2387,0.77,0.7346);
+                                }
+                                else if((i%2==0 && j%2 ==0) || (i%2==1 && j%2 ==1)) {
+                                        glColor3f(0.0,0.4,0.0);
+                                }else{
+                                        glColor3f(0.0,0.5,0.0);
+                                }
+
+                                grid[i][j].draw();
+                                glPopMatrix();
                         }
                 }
-        }
+                // End Grid drawing
 
-        for(unsigned int i = 0; i < 50; i++) {
-                if(attackers[i] != NULL) {
-                        attackers[i]->draw();
+                glColor3f(1.0,0.1,0.1);
+                for (int i = 0; i < 5; i++) {
+                        for (int j = 0; j < 9; j++) {
+                                if(grid[i][j].drawableObject != NULL) {
+                                        grid[i][j].drawableObject->draw();
+                                }
+                        }
                 }
+
+                for(unsigned int i = 0; i < 50; i++) {
+                        if(attackers[i] != NULL) {
+                                attackers[i]->draw();
+                        }
+                }
+
+                glPopMatrix(); // end camera
+
+        }else {
+                drawBitmapText("The zombies ate your brains! ", 0.5, 11.5, 0);
         }
-
-        glPopMatrix(); // end camera
-
         glutSwapBuffers();
 }
 
 void timer(int t) {
+        if(lanesDestroyed >= 3) {
+                gameOver = true;
+                glutPostRedisplay();
+                return;
+        }
         if(!paused) {
 
                 if(cinematic) {
@@ -168,6 +178,7 @@ void timer(int t) {
                                                 if(checkBulletCollision((dynamic_cast<Defender*>(grid[lane][j].drawableObject))->bullet,attackers[i])) {
                                                         if(attackers[i]->health <= 0) {
                                                                 kills++;
+                                                                resources += 50;
                                                                 attackers[i]->visible = false;
                                                         }
                                                 }
@@ -203,7 +214,7 @@ void timer(int t) {
 
                 }
 
-                resources += 0.15 * resourceGatherers;
+                resources += 0.13 * resourceGatherers;
 
                 spawnTimer += 33;
 
