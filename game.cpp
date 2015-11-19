@@ -79,7 +79,6 @@ void render(void) {
         if(cinematic) {
                 camera->rotateCamera(false,true,false);
         }
-        drawAxes();
 
         glTranslatef(-4.5,0.0,-2.5);         // Translating the whole scene
 
