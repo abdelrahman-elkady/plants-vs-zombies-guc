@@ -9,7 +9,7 @@ void Bullet::draw(){
         if(this->visible) {
                 glPushMatrix();
                 glColor3f(0.84,0.239,0.1596);
-                glTranslatef(this->xCoordinate+0.5,1.4,this->zCoordinate+0.5);
+                glTranslatef(this->xCoordinate+0.5,1.0,this->zCoordinate+0.5);
                 glutSolidSphere(0.05,15,15);
                 glPopMatrix();
         }
