@@ -22,12 +22,13 @@ bool checkUnitCollision(Drawable*, Attacker*);
 
 const int FPS = 33;
 
-Camera* camera = new Camera(7.0,4.0,7.0,0.0,0.0,0.0);
+Camera* camera = new Camera(0.0,10.0,10.0,0.0,0.0,0.0);
 
 Tile grid[5][9];
 Attacker* attackers[50];
 
 bool paused = false;
+bool cinematic = false;
 
 int selectionMode = ROW_SELECTION;
 
@@ -45,7 +46,9 @@ void render(void) {
         camera->activate();
 
         glPushMatrix(); // camera
-        camera->rotateCamera(false,true,false);
+        if(cinematic) {
+                camera->rotateCamera(false,true,false);
+        }
         drawAxes();
 
         glTranslatef(-4.5,0.0,-2.5); // Translating the whole scene
@@ -97,10 +100,17 @@ void render(void) {
 void timer(int t) {
         if(!paused) {
 
-                camera->setXAngle(camera->getXAngle() + 0.5);
-                camera->setYAngle(camera->getYAngle() + 0.5);
-                camera->setZAngle(camera->getZAngle() + 0.5);
+                if(cinematic) {
+                        camera->setXAngle(camera->getXAngle() + 0.5);
+                        camera->setYAngle(camera->getYAngle() + 0.5);
+                        camera->setZAngle(camera->getZAngle() + 0.5);
+                } else {
+                        camera->setXAngle(0.0);
+                        camera->setYAngle(0.0);
+                        camera->setZAngle(0.0);
+                }
 
+                cout << resources << endl;
 
                 for (int i = 0; i < 5; i++) {
                         for (int j = 0; j < 9; j++) {
@@ -125,9 +135,9 @@ void timer(int t) {
 
                                         // removing attackers on lane
                                         for (int k = 0; k < 50; k++) {
-                                          if(attackers[k] != NULL && int(attackers[k]->zCoordinate) == lane) {
-                                            attackers[k]->visible = false;
-                                          }
+                                                if(attackers[k] != NULL && int(attackers[k]->zCoordinate) == lane) {
+                                                        attackers[k]->visible = false;
+                                                }
                                         }
 
 
@@ -180,15 +190,17 @@ void timer(int t) {
 
 void keyboardHandler(unsigned char key, int x, int y){
 
-        if(key == Z_KEY) {
-                camera->setXCoordinate(camera->getXCoordinate()+0.5);
+        if(key == Z_KEY && !cinematic) {
                 camera->setYCoordinate(camera->getYCoordinate()+0.5);
                 camera->setZCoordinate(camera->getZCoordinate()+0.5);
         }
-        if(key == A_KEY) {
-                camera->setXCoordinate(camera->getXCoordinate()-0.5);
+        if(key == A_KEY && !cinematic) {
                 camera->setYCoordinate(camera->getYCoordinate()-0.5);
                 camera->setZCoordinate(camera->getZCoordinate()-0.5);
+        }
+
+        if(key == V_KEY) {
+                cinematic = !cinematic;
         }
 
         if(key == P_KEY) {
@@ -207,14 +219,16 @@ void keyboardHandler(unsigned char key, int x, int y){
                         grid[selectedRow][selectedColumn].highlighted = true;
                 }
         }else if (selectionMode == TYPE_SELECTION) {
-                if(key == D_KEY && !grid[selectedRow][selectedColumn].destroyed) {
+                if(key == D_KEY && !grid[selectedRow][selectedColumn].destroyed && resources >= 150 && grid[selectedRow][selectedColumn].drawableObject == NULL) {
                         grid[selectedRow][selectedColumn].drawableObject = new Defender(selectedColumn,0,selectedRow);
+                        resources -= 150;
                         selectionMode = ROW_SELECTION;
                         grid[selectedRow][selectedColumn].highlighted = false;
                         selectedRow = -1;
                         selectedColumn = -1;
-                } else if (key == R_KEY && !grid[selectedRow][selectedColumn].destroyed) {
+                } else if (key == R_KEY && !grid[selectedRow][selectedColumn].destroyed && resources >= 100 && grid[selectedRow][selectedColumn].drawableObject == NULL) {
                         grid[selectedRow][selectedColumn].drawableObject = new Gatherer(selectedColumn,0,selectedRow);
+                        resources -= 100;
                         selectionMode = ROW_SELECTION;
                         grid[selectedRow][selectedColumn].highlighted = false;
                         selectedRow = -1;

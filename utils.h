@@ -16,6 +16,7 @@ using namespace std;
 #define D_KEY 100
 #define R_KEY 114
 #define C_KEY 99
+#define V_KEY 118
 
 #define NUM_1 49
 #define NUM_2 50
