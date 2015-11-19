@@ -65,6 +65,7 @@ void render(void) {
                 drawBitmapText("Cost of Defender --> 150 ", 0.5, 11.5, 0);
                 drawBitmapText("Cost of Resource Gatherer --> 100 ", 0.5, 11.0, 0);
                 drawBitmapText("Resources " + patch::to_string(int(resources)), 0.5, 10.5, 0);
+                drawBitmapText("Killed Zombies " + patch::to_string(int(kills)), 3, 10.5, 0);
         }else {
                 if(lanesDestroyed >= 3) {
                         drawBitmapText("The zombies ate your brains! ", 0.5, 11.5, 0);
