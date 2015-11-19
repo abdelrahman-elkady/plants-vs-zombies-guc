@@ -85,7 +85,6 @@ void render(void) {
 
         for(unsigned int i = 0; i < 50; i++) {
                 if(attackers[i] != NULL) {
-                        glColor3f(attackers[i]->health/3.0,0.0,0.0);
                         attackers[i]->draw();
                 }
         }
