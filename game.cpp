@@ -179,7 +179,7 @@ void timer(int t) {
                                         lanesDestroyed++;
                                 }
 
-                                for (int j = 0; j < 8; j++) {
+                                for (int j = 0; j < 9; j++) {
                                         int lane = int((attackers[i])->zCoordinate);
                                         if(dynamic_cast<Defender*>(grid[lane][j].drawableObject) != NULL ) {
                                                 if(checkBulletCollision((dynamic_cast<Defender*>(grid[lane][j].drawableObject))->bullet,attackers[i])) {
