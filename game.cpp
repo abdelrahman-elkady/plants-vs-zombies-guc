@@ -21,7 +21,6 @@ bool checkBulletCollision(Bullet*,Attacker*);
 bool checkUnitCollision(Drawable*, Attacker*);
 
 const int FPS = 33;
-int kills = 0;
 
 Camera* camera = new Camera(7.0,4.0,7.0,0.0,0.0,0.0);
 
@@ -36,6 +35,9 @@ int selectedRow = -1;
 int selectedColumn = -1;
 
 float spawnTimer = 0;
+int kills = 0;
+int resources = 500;
+int lanesDestroyed = 0;
 void render(void) {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -111,13 +113,34 @@ void timer(int t) {
 
                 for(unsigned int i = 0; i < 50; i++) {
                         if(attackers[i] != NULL) {
+
+                                if( attackers[i]->visible && attackers[i]->xCoordinate <= -0.5) {
+                                        int lane = int((attackers[i])->zCoordinate);
+                                        attackers[i]->visible = false;
+
+                                        // removing units on lane
+                                        for (int k = 0; k < 9; k++) {
+                                                grid[lane][k].destroyed = true;
+                                                grid[lane][k].drawableObject = NULL;
+                                        }
+
+                                        // removing attackers on lane
+                                        for (int k = 0; k < 50; k++) {
+                                          if(attackers[k] != NULL && int(attackers[k]->zCoordinate) == lane) {
+                                            attackers[k]->visible = false;
+                                          }
+                                        }
+
+
+                                        lanesDestroyed++;
+                                }
+
                                 for (int j = 0; j < 8; j++) {
                                         int lane = int((attackers[i])->zCoordinate);
                                         if(dynamic_cast<Defender*>(grid[lane][j].drawableObject) != NULL ) {
                                                 if(checkBulletCollision((dynamic_cast<Defender*>(grid[lane][j].drawableObject))->bullet,attackers[i])) {
                                                         if(attackers[i]->health <= 0) {
                                                                 kills++;
-                                                                cout <<kills<<endl;
                                                                 attackers[i]->visible = false;
                                                         }
                                                 }
@@ -140,8 +163,9 @@ void timer(int t) {
 
                 if(spawnTimer > 8000 + generateRandom(0,2000)) { // Random generation period ( +- 2 seconds )
                         for (int i = 0; i < 50; i++) {
-                                if(attackers[i] == NULL || !attackers[i]->visible) {
-                                        attackers[i] = new Attacker(generateRandom(0,4));
+                                int lane = generateRandom(0,4);
+                                if((attackers[i] == NULL || !attackers[i]->visible) && !grid[lane][0].destroyed) {
+                                        attackers[i] = new Attacker(lane);
                                         spawnTimer = 0;
                                         break;
                                 }
@@ -184,20 +208,25 @@ void keyboardHandler(unsigned char key, int x, int y){
                         grid[selectedRow][selectedColumn].highlighted = true;
                 }
         }else if (selectionMode == TYPE_SELECTION) {
-                if(key == D_KEY) {
+                if(key == D_KEY && !grid[selectedRow][selectedColumn].destroyed) {
                         grid[selectedRow][selectedColumn].drawableObject = new Defender(selectedColumn,0,selectedRow);
                         selectionMode = ROW_SELECTION;
                         grid[selectedRow][selectedColumn].highlighted = false;
                         selectedRow = -1;
                         selectedColumn = -1;
-                } else if (key == R_KEY) {
+                } else if (key == R_KEY && !grid[selectedRow][selectedColumn].destroyed) {
                         grid[selectedRow][selectedColumn].drawableObject = new Gatherer(selectedColumn,0,selectedRow);
                         selectionMode = ROW_SELECTION;
                         grid[selectedRow][selectedColumn].highlighted = false;
                         selectedRow = -1;
                         selectedColumn = -1;
-                } else if (key == C_KEY) {
+                } else if (key == C_KEY && !grid[selectedRow][selectedColumn].destroyed) {
                         grid[selectedRow][selectedColumn].drawableObject = NULL;
+                        selectionMode = ROW_SELECTION;
+                        grid[selectedRow][selectedColumn].highlighted = false;
+                        selectedRow = -1;
+                        selectedColumn = -1;
+                }else {
                         selectionMode = ROW_SELECTION;
                         grid[selectedRow][selectedColumn].highlighted = false;
                         selectedRow = -1;

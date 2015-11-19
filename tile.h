@@ -11,11 +11,13 @@ private:
 public:
         Drawable* drawableObject;
         bool highlighted;
+        bool destroyed;
 
         Tile(float width=1,float height=1) {
                 this->width = width;
                 this->height = height;
                 this->highlighted = false;
+                this->destroyed = false;
         }
 
         void draw();

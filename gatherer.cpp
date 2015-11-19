@@ -8,7 +8,7 @@ void Gatherer::draw(){
         glPushMatrix(); // Spring drawing
         glTranslatef(this->xCoordinate+0.5,0.3,this->zCoordinate+0.5);// TODO: link coordinates with index on grid
         float height = 0;
-        for (int i = 0; i < 200; i+=1) {
+        for (int i = 0; i < 150; i+=1) {
                 glPushMatrix();
                 glRotatef(this->angle,0,1,0);
                 glTranslatef(0.0,height,0.0);
