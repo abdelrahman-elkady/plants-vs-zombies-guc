@@ -15,5 +15,5 @@ $ sudo apt-get install binutils-gold
 - Run the make file and the executable 
 ```bash
 $ make
-$./out
+$ ./out
 ```
